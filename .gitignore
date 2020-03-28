@@ -24,3 +24,6 @@ cabal.project.local~
 
 # idea
 .idea
+
+# Others
+/more
