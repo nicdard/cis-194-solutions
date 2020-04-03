@@ -87,3 +87,5 @@ instance Num a => Num (SquareMatrix2 a) where
                       (a3 * b1 + a4 * b3) (a3 * b2 + a4 * b4)
 
 fib4 :: Integer -> Integer
+fib4 n = let SquareMatrix2 f _ _ _ = SquareMatrix2 1 1 1 0 ^ n
+         in f
