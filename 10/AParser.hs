@@ -84,9 +84,7 @@ instance Applicative Parser where
     p1 <*> p2 = Parser f
         where f xs = case runParser p1 xs of
                 Nothing         -> Nothing
-                Just (h, rest)  -> case runParser p2 rest of
-                    Nothing     -> Nothing
-                    Just (v, r) -> Just (h v, r)
+                Just (h, rest)  -> first h <$> runParser p2 rest
 
 -- Exercise 3
 abParser :: Parser (Char, Char)
@@ -97,9 +95,10 @@ abParser_ = () <$ abParser
 
 
 intPair :: Parser [Integer]
-intPair = (\x _ -> (:) x) <$> posInt
+intPair = (\x _ y -> [x, y])
+            <$> posInt
             <*> char ' '
-            <*> ((:[]) <$> posInt)
+            <*> posInt
 
 -- Exercise 4
 instance Alternative Parser where
