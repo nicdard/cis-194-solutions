@@ -27,7 +27,7 @@ die = getRandom
 
 type Army = Int
 
-data Battlefield = Battlefield { attackers :: Army, defenders :: Army }
+data Battlefield = Battlefield { attackers :: Army, defenders :: Army } deriving Show
 
 -- Exercise 2
 maxAttackers :: Army -> Army
@@ -70,9 +70,12 @@ invade b
 
 -- Exercise 4
 successProb :: Battlefield -> Rand StdGen Double
-successProb b = (/1000) . foldr (\(Battlefield a d) p ->
-                        if d == 0 && a > 1
-                            then p + 1
-                            else p
-                      ) 0
+successProb b = (/1000) . genericLength . filter (\(Battlefield a d) -> a > d)
                 <$> replicateM 1000 (invade b)
+
+main :: IO ()
+main = do
+    let battlefield = Battlefield { attackers = 12, defenders = 10 }
+    print =<< evalRandIO (battle battlefield)
+    print =<< evalRandIO (invade battlefield)
+    print =<< evalRandIO (successProb battlefield)
